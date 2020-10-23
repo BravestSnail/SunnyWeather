@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SunnyWeather</string>
+    <string name="search_layout">输入地址</string>
+</resources>
