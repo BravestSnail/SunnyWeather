@@ -1,5 +1,6 @@
 package com.sunnyweather.android.ui.weather
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
@@ -32,6 +33,7 @@ class WeatherActivity : AppCompatActivity() {
         ViewModelProvider(this).get(WeatherViewModel::class.java)
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_weather)
@@ -57,8 +59,41 @@ class WeatherActivity : AppCompatActivity() {
                 "无法成功获取天气信息".showToast(this)
                 result.exceptionOrNull()?.printStackTrace()
             }
+            swipRefresh.isRefreshing = false
         })
+        swipRefresh.setColorSchemeColors(R.color.design_default_color_primary)
+        refreshWeather()
+        swipRefresh.setOnRefreshListener {
+            refreshWeather()
+        }
+//        加入滑动菜单的逻辑处理
+        navBtn.setOnClickListener {
+            drawerLayout.openDrawer(GravityCompat.START)
+        }
+        drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener{
+            override fun onDrawerStateChanged(newState: Int) {
+
+            }
+
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                val manager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                manager.hideSoftInputFromWindow(drawerView.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS)
+            }
+        })
+    }
+
+    fun refreshWeather(){
         viewModel.refreshWeather(viewModel.locationLng, viewModel.locationLat)
+        swipRefresh.isRefreshing = true
     }
 
     private fun showWeatherInfo(weather: Weather) {

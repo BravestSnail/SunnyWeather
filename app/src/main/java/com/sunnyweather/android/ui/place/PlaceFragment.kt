@@ -12,10 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sunnyweather.android.R
-import com.sunnyweather.android.SunnyWeatherApplication
-import com.sunnyweather.android.showSnackbar
-import com.sunnyweather.android.showToast
+import com.sunnyweather.android.*
 import com.sunnyweather.android.ui.weather.WeatherActivity
 import kotlinx.android.synthetic.main.fragment_place.*
 
@@ -31,8 +28,8 @@ class PlaceFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        if (viewModel.isPlaceSaved()){
+        //如果存储了地点直接打开WeatherActivity
+        if (activity is MainActivity && viewModel.isPlaceSaved()){
             val place = viewModel.getSavedPlace()
             val intent = Intent(context, WeatherActivity::class.java).apply {
                 putExtra("location_lng", place.location.lng)
